@@ -7,15 +7,28 @@ namespace Util
 {
     public class CoroutineManager
     {
+        private List<Coroutine> coroutines;
+        private bool _inCoroutine;
+        
+        public bool InCoroutine
+        {
+            get { return _inCoroutine; }
+            set { _inCoroutine = value; }
+        }
+
         public CoroutineManager()
         {
             coroutines = new List<Coroutine>();
         }
 
-        public void StartCoroutine(IEnumerable<CoroutineWaitState> enumerable)
+        public Coroutine StartCoroutine(IEnumerable<CoroutineWaitState> enumerable)
         {
             Coroutine coroutine = new Coroutine(enumerable);
-            coroutines.Add(coroutine);
+            if (!InCoroutine)
+            {
+                coroutines.Add(coroutine);
+            }
+            return coroutine;
         }
 
         public void Advance(float deltaTime)
@@ -24,12 +37,12 @@ namespace Util
                 {
                     return !coroutine.Ready;
                 }).ToList();
+            InCoroutine = true;
             foreach (Coroutine coroutine in coroutines)
             {
                 coroutine.Advance(deltaTime);
             }
+            InCoroutine = false;
         }
-
-        private List<Coroutine> coroutines;
     }
 }

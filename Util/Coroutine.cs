@@ -8,7 +8,7 @@ namespace Util
 {
     public class Coroutine : CoroutineWaitState
     {
-        public Coroutine(IEnumerable<CoroutineWaitState> enumerable)
+        internal Coroutine(IEnumerable<CoroutineWaitState> enumerable)
         {
             iterator = enumerable.GetEnumerator();
         }
